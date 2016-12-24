@@ -1,12 +1,12 @@
 # VagrantBoxes
 
+I was sick of creating a random VagrantFile every time I wanted to randomly test something, so I made this repo.
+
 <!-- TOC depthFrom:2 -->
 
 - [Boxes](#boxes)
 
 <!-- /TOC -->
-
-I was sick of creating a random VagrantFile every time I wanted to randomly test something.
 
 ## Boxes
 
