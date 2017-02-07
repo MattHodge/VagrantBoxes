@@ -59,8 +59,7 @@ $ApiObj = $repository.Users.CreateApiKey($UserObj, $APIKeyPurpose)
 # CREATE ENVIRONMENT
 #############################
 
-& octo create-environment --name testing --server http://localhost --apikey $ApiObj.ApiKey --ignoreSslErrors
-
+& octo create-environment --name Testing --server http://localhost --apikey $ApiObj.ApiKey
 
 #############################
 # INSTALL LOCAL TENTACLE
@@ -88,18 +87,4 @@ Function Register-OctopusTentacle([string]$EnvironmentName, [string]$AppRole, [s
     Set-Service -Name 'OctopusDeploy Tentacle' -StartupType Automatic
 }
 
-Register-OctopusTentacle -EnvironmentName 'testing' -AppRole 'octopus-server' -OctopusServerThumbprint $thumb -OctopusAPIKey $ApiObj.ApiKey -Localhostname $env:COMPUTERNAME
-
-#############################
-# ENABLE SSL ON WEB INTERFACE
-#############################
-
-# $newCert = New-SelfSignedCertificate -DnsName 'octopus.vagrant.local' -CertStoreLocation 'cert:\LocalMachine\My' -NotAfter (Get-Date).AddYears(10)
-
-# # attach certificate for the web interface
-# & "netsh.exe" http add sslcert ipport=0.0.0.0:443 appid='{E2096A4C-2391-4BE1-9F17-E353F930E7F1}' certhash=$($newCert.Thumbprint) certstorename=My
-# Start-Process -FilePath $OctoExe -ArgumentList "configure --instance ""OctopusServer"" --webForceSSL ""True""" -Wait -NoNewWindow
-# Start-Process -FilePath $OctoExe -ArgumentList "configure --instance ""OctopusServer"" --webListenPrefixes ""http://localhost/,https://localhost/""" -Wait -NoNewWindow
-# Start-Process -FilePath $OctoExe -ArgumentList "service --instance ""OctopusServer"" --stop --start" -Wait -NoNewWindow
-
-# New-NetFirewallRule -DisplayName 'Allow Octopus HTTPS' -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow
+Register-OctopusTentacle -EnvironmentName 'Testing' -AppRole 'octopus-server' -OctopusServerThumbprint $thumb -OctopusAPIKey $ApiObj.ApiKey -Localhostname $env:COMPUTERNAME
