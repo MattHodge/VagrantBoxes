@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "MattHodge/Windows2016-WMF5-NOCM"
+  config.vm.box = "MattHodge/Windows2016StdCore-WMF5-NOCM"
   config.vm.provider "virtualbox" do |vb|
     vb.gui = true
     vb.memory = "1024"
@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider "hyperv" do |hv|
     # hyperv provisioner doesn't name things nicey
     randy = rand(10000)
-    hv.vmname = "Windows2016-WMF5-NOCM" + randy.to_s
+    hv.vmname = "Windows2016StdCore-WMF5-NOCM" + randy.to_s
     hv.cpus = 1
     hv.memory = 1024
     hv.differencing_disk = true

@@ -1,13 +1,23 @@
 $ErrorActionPreference = 'Stop'
 
-# Install
+#############################
+# OCTOPUS CREDENTIALS
+#############################
+$OctopusUsername = "Administrator"
+$OctopusPassword = "OctoVagrant!"
+
+#############################
+# INSTALL PACKAGES
+#############################
 choco install mssqlserver2014express -y
 choco install octopusdeploy -y
 choco install octopusdeploy.tentacle -y
 choco install octopustools -y
 
-$OctopusUsername = "Administrator"
-$OctopusPassword = "OctoVagrant!"
+
+#############################
+# CONFIGURE OCTO SERVER
+#############################
 
 $OctoExe = "C:\Program Files\Octopus Deploy\Octopus\Octopus.Server.exe"
 
@@ -33,6 +43,54 @@ New-NetFirewallRule -DisplayName 'HTTP(S) Inbound' -Profile @('Domain', 'Private
 #############################
 
 $OctopusURI = "http://localhost" #Octopus URL
+
+$APIKeyPurpose = "PowerShell" #Brief text to describe the purpose of your API Key.
+
+#Adding libraries. Make sure to modify these paths acording to your environment setup.
+Add-Type -Path "C:\Program Files\Octopus Deploy\Octopus\Newtonsoft.Json.dll"
+Add-Type -Path "C:\Program Files\Octopus Deploy\Octopus\Octopus.Client.dll"
+
+#Creating a connection
+$endpoint = new-object Octopus.Client.OctopusServerEndpoint $OctopusURI
+$repository = new-object Octopus.Client.OctopusRepository $endpoint
+
+#Creating login object
+$LoginObj = New-Object Octopus.Client.Model.LoginCommand
+$LoginObj.Username = $OctopusUsername
+$LoginObj.Password = $OctopusPassword
+
+#Loging in to Octopus
+$repository.Users.SignIn($LoginObj)
+
+#Getting current user logged in
+$UserObj = $repository.Users.GetCurrent()
+
+#Creating API Key for user. This automatically gets saved to the database.
+$ApiObj = $repository.Users.CreateApiKey($UserObj, $APIKeyPurpose)
+
+#############################
+# CREATE ENVIRONMENT
+#############################
+
+& octo create-environment --name Testing --server http://localhost --apikey $ApiObj.ApiKey
+
+#############################
+# INSTALL LOCAL TENTACLE
+#############################
+
+# Get octo thumbprint
+$thumb = (& $OctoExe show-thumbprint)[-1]
+
+New-NetFirewallRule -DisplayName 'Allow Octopus HTTP' -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow
+
+#############################
+# GET API KEY
+#############################
+
+$OctopusURI = "http://localhost" #Octopus URL
+
+$OctopusUsername = "Administrator" #API Key will belong to this user
+$OctopusPassword = "OctoVagrant!" #Password of the user above
 
 $APIKeyPurpose = "PowerShell" #Brief text to describe the purpose of your API Key.
 
