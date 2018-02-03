@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
     randy = rand(10000)
     hv.vmname = "Windows2016StdCore-WMF5-NOCM" + randy.to_s
     hv.cpus = 1
-    hv.memory = 1024
+    hv.memory = 6144
     hv.differencing_disk = true
   end
 
