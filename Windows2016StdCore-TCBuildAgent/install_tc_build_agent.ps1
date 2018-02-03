@@ -18,7 +18,7 @@ authorizationToken=
 teamcity.agent.provides.virtualbox true
 "@
 
-Set-Content -Path C:\buildAgent\conf\buildAgent.properties -Value $tcAgentConfig -Force
+$tcAgentConfig | Out-File -FilePath C:\buildAgent\conf\buildAgent.properties -Encoding ASCII -Force
 
 Restart-Service -Name TCBuildAgent
 Start-Service -Name TCBuildAgent
