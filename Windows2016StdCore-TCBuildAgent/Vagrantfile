@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "MattHodge/Windows2016StdCore-WMF5-NOCM"
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = true
+    vb.memory = "6144"
+    vb.linked_clone = true
+  end
+
+  config.vm.provider "hyperv" do |hv|
+    # hyperv provisioner doesn't name things nicey
+    randy = rand(10000)
+    hv.vmname = "Windows2016StdCore-WMF5-NOCM" + randy.to_s
+    hv.cpus = 1
+    hv.memory = 1024
+    hv.differencing_disk = true
+  end
+
+  config.vm.provision "shell", path: "install_tc_build_agent.ps1", env: {"TEAMCITY_HOST_URL" => ENV['TEAMCITY_HOST_URL']}
+end
