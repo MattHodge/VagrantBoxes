@@ -8,14 +8,15 @@ choco install packer -y
 choco install virtualbox -y
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Program Files\Git\usr\bin", "Machine")
 
-$tcAgentConfig = "
+$tcAgentConfig = @"
 serverUrl=$($env:TEAMCITY_HOST_URL)
 name=NESTEDVIRTUALBOX
 workDir=../work
 tempDir=../temp
 systemDir=../system
 authorizationToken=
-teamcity.agent.provides.virtualbox true"
+teamcity.agent.provides.virtualbox true
+"@
 
 Set-Content -Path C:\buildAgent\conf\buildAgent.properties -Value $tcAgentConfig -Force
 
