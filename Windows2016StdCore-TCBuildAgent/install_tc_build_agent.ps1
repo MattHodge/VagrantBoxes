@@ -10,11 +10,12 @@ choco install virtualbox -y
 
 $tcAgentConfig = "
 serverUrl=$($env:TEAMCITY_HOST_URL)
-name=VirtualBox
+name=NESTEDVIRTUALBOX
 workDir=../work
 tempDir=../temp
 systemDir=../system
-teamcity.agent.provides.hyperv true"
+authorizationToken=
+teamcity.agent.provides.virtualbox true"
 
 Set-Content -Path C:\buildAgent\conf\buildAgent.properties -Value $tcAgentConfig -Force
 
